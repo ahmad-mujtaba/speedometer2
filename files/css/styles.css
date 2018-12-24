@@ -188,14 +188,20 @@ body {
 }
 
 .speed-dial {
-    
+    text-align: center;
 }
 
 .speed {
     font-family:'digital';
-    font-size:96px;
+    font-size:110px;
     font-style: italic;
-    text-shadow:0px 0px 10px rgba(255, 0,0, 0.9);
+	text-shadow:0px 0px 10px rgba(255, 0,0, 0.9);
+	display: block;
+}
+
+.zeropad{
+	color:rgba(255,255,255, 0.33);
+	text-shadow: none;
 }
 .unit {
     vertical-align: super;

@@ -15,7 +15,15 @@ $(document).ready(function(){
             let speed = 0;
             
             if(position.coords.speed != null) {
-                speed = position.coords.speed * 3.6;
+                speed = Math.floor(position.coords.speed * 3.6);
+            }
+
+            if (speed <= 0){
+                speed = '<span class="zeropad">000</span>';
+            } else if(speed > 0 && speed < 10) {
+                speed = '<span class="zeropad">00</span>'+speed;
+            } else {
+                speed = '<span class="zeropad">0</span>'+speed;
             }
             
             $speed.html(speed);
