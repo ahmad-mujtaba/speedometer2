@@ -5,7 +5,15 @@
 <head>
 	<meta charset='utf-8'>
 	<meta http-equiv='x-ua-compatible' content='ie=edge'>
-	<meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#000000">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#000000">
 
     <title>Speedometer</title>
 
@@ -17,14 +25,14 @@
 <body>
 
 
+    <div class='start-wrapper wrapper'>
+        <button class='start'>START</button>
+    </div>
     <div class='wrapper'>
 
         <div class='speed-dial'>
-            <span class='speed'>
-                <span class='zeropad'>0</span>
-                5
-            </span>
-            <span class='unit'>km/hr</span>
+            <span class='speed'><span class='zeropad'>8</span><span class='zeropad'>8</span><span class='zeropad'>8</span></span>
+            <span class='unit'>kmph</span>
         </div>
 
         
@@ -32,8 +40,29 @@
 
     <div class='dev'></div>
 
+    <div class='stats'>
+        <div>
+            <div>
+                Max Speed <span class='val max-speed'><span class='font-digital'>0</span> kmph</span>
+            </div>
+            <div>
+                Avg Speed <span class='val avg-speed'><span class='font-digital'>0</span> kmph</span>
+            </div>
+        </div>
+        
+        <div>
+            <div>
+                Distance <span class='val distance'><span class='font-digital'>0</span> km</span>
+            </div>
+            <div>
+                Time <span class='val elapsed'><span class='font-digital'>0</span> minutes</span>
+            </div>
+        </div>
+    </div>
+
 
     <script src="files/js/jquery.min.js"></script>
+    <script src="files/js/nosleep.js"></script>
     <script src="files/js/app.js"></script>
 </body>
 
