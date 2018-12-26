@@ -101,8 +101,10 @@ const App = {
 
         if (this.prevLat != null && this.prevLon != null) {
             let prevCoords = [this.prevLat, this.prevLon];
-
-            this.totalDistance += haversineDistance(prevCoords, [position.coords.latitude, position.coords.longitude], false);
+            let deltaD = haversineDistance(prevCoords, [position.coords.latitude, position.coords.longitude], false); // in km
+            if (deltaD > (position.coords.accuracy / 1000)) {
+                this.totalDistance += deltaD - (position.coords.accuracy / 2000);
+            }
         }
 
         this.prevLat = position.coords.latitude;
