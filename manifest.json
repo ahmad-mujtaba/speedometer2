@@ -13,7 +13,7 @@
         "sizes": "512x512"
       }
     ],
-    "start_url": "/?utm_source=launch",
+    "start_url": "/speedometer2/?utm_source=launch",
     "background_color": "#000000",
     "display": "standalone",    
     "theme_color": "#000000"
