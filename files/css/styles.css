@@ -203,10 +203,30 @@ body {
 }
 .speed {
     font-family:'digital';
-    font-size:110px;
+    font-size:120px;
     font-style: italic;
 	text-shadow:0px 0px 10px rgb(255, 213, 213);
 	display: block;
+
+}
+
+.speed.pulse {
+	
+	transition: 300ms ease text-shadow;
+
+	animation: pulse 400ms 1;
+}
+
+@keyframes pulse {
+	0% {
+		text-shadow:0px 0px 10px rgb(255, 213, 213);
+	}
+	70% {
+		text-shadow:0px 0px 30px rgba(255, 213, 213, 0);
+	}
+	100% {
+
+	}
 }
 
 .zeropad{
