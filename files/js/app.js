@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
 
-	const PROD_MODE = false;//navigator.platform.indexOf("Win") === -1;
+	const PROD_MODE = navigator.platform.indexOf("Win") === -1;
 
 	if (PROD_MODE) {
 		$(".dev").hide();
