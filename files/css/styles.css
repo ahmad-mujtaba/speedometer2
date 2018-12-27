@@ -187,15 +187,14 @@ body {
     align-items: center;
 }
 
-.start-wrapper {
-	background: #000;
-    z-index: 1;
-    position: fixed;
-    top: 0;
-}
+
+
 .speed-dial {
-    text-align: center;
+	text-align: center;
+	transition: 400ms ease all;
 }
+
+
 
 
 .font-digital {
@@ -207,27 +206,15 @@ body {
     font-style: italic;
 	text-shadow:0px 0px 10px rgb(255, 213, 213);
 	display: block;
-
 }
 
-.speed.pulse {
-	
-	transition: 300ms ease text-shadow;
-
-	animation: pulse 400ms 1;
+.idle .speed-dial, .idle .speed {
+	font-size:0 !important;	
 }
 
-@keyframes pulse {
-	0% {
-		text-shadow:0px 0px 10px rgb(255, 213, 213);
-	}
-	70% {
-		text-shadow:0px 0px 30px rgba(255, 213, 213, 0);
-	}
-	100% {
 
-	}
-}
+
+
 
 .zeropad{
 	color:rgba(255,255,255, 0.18);
@@ -246,9 +233,14 @@ body {
 	color:green;
 	font-family: 'Courier New', Courier, monospace;
 	font-size:11px;	
+	white-space: pre ; display: block; 
+	unicode-bidi: embed;
 
+	transition:400ms ease all;
+}
 
-	white-space: pre ; display: block; unicode-bidi: embed
+.idle .dev  {
+	top:-1000px;
 }
 
 .stats {
@@ -260,6 +252,8 @@ body {
 	color:#555;
 	z-index:0;
 }
+
+
 
 .stats .val {
 	color:rgb(255, 50, 50);
@@ -273,15 +267,73 @@ body {
 	padding:1rem;
 }
 
-button.start {
-	display:inline-block;
-	padding:1em 2em;
-	border:1px solid red;
-	color:red;
-	background:#000;
-	font-family: 'digital',monospace;
-	font-style: italic;
-	font-size:36px;
+button.ignition {
+	display:block;
+	padding:1em;
+	width:75px;
+	height:75px;
+	color:rgba(255, 255, 255, 0.8);
+	background: linear-gradient(#444, #000);
+	border:1px solid rgb(218, 218, 218);
+	font-size:18px;
+	letter-spacing: -1px;
 	border-radius:100em;
-	cursor: pointer;
+	cursor: pointer;    
+	box-sizing: content-box;
+	position:relative;
+	text-align: center;
+	text-transform: uppercase;
+
+	transition: 400ms ease all;
 }
+
+button.ignition:before {
+	content:'';
+	
+	top:-8px;
+	bottom:-8px;
+	left:-8px;
+	right:-8px;
+	position: absolute;
+	z-index:-1;
+	background:linear-gradient(rgb(218, 218, 218), rgb(43, 43, 43));
+	border-radius:100em;
+	transition: 400ms ease all;
+}
+
+button.ignition:after {
+	
+	content: 'start';
+    z-index: 1;
+    transition: 400ms ease all;
+    position: absolute;
+    top: 47px;
+    left: 31px;
+}
+
+.running button.ignition {
+	width:32px;
+	height:32px;
+
+	margin-top: 4rem;
+}
+.running button.ignition:after {
+	content:'start';
+	font-size:0;
+	background:linear-gradient(rgb(218, 218, 218), rgb(138, 138, 138));
+	box-shadow: 1px 1px 0px 0px rgba(0,0,0, 0.4);
+	position:absolute;
+	width:20px;
+	height:20px;
+	top:24px;
+	left:24px;
+
+}
+.running button.ignition::before {
+	top:-3px;
+	bottom:-3px;
+	left:-3px;
+	right:-3px;
+	transition: 200ms ease all;
+}
+
