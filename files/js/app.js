@@ -5,7 +5,7 @@
 
 $(document).ready(function () {
 
-    const PROD_MODE = true;//navigator.platform.indexOf("Win") === -1;
+    const PROD_MODE = false;//navigator.platform.indexOf("Win") === -1;
 
     if (PROD_MODE) {
         $(".dev").hide();
@@ -39,6 +39,11 @@ const App = {
 
         $(".ignition").click(function (e) {
 
+            if('vibrate' in navigator) {
+                navigator.vibrate(50);                
+            }
+
+            let noSleep = new NoSleep();
 
             if ($('body').hasClass('idle')) {
 
@@ -50,15 +55,19 @@ const App = {
                 _this.geoWatchId = _this.startGeolocation(isProd);
 
 
-                let noSleep = new NoSleep();
+                
                 noSleep.enable();
 
                 const body = $('body')[0];
-                let fullScreen = body.requestFullScreen || body.webkitRequestFullScreen || body.mozRequestFullScreen || body.msRequestFullScreen;
+                let fullScreen = body.requestFullscreen || body.webkitRequestFullScreen || body.mozRequestFullScreen || body.msRequestFullscreen;
                 fullScreen.call(body);
             } else {
                 $('body.running').removeClass('running').addClass('idle');
                 _this.stopGeolocation(isProd, _this.geoWatchId);
+                noSleep.disable();
+
+                let exitFullScreen = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+                exitFullScreen.call(document);
             }
 
         });

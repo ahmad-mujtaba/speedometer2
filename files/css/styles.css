@@ -285,6 +285,14 @@ button.ignition {
 	text-transform: uppercase;
 
 	transition: 400ms ease all;
+
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 button.ignition:before {
@@ -314,13 +322,14 @@ button.ignition:after {
 .running button.ignition {
 	width:32px;
 	height:32px;
-
+	background: linear-gradient(#111, #000);
+	border:1px solid rgb(224, 47, 47);
 	margin-top: 4rem;
 }
 .running button.ignition:after {
 	content:'start';
 	font-size:0;
-	background:linear-gradient(rgb(218, 218, 218), rgb(138, 138, 138));
+	background:linear-gradient(rgb(224, 47, 47), rgb(131, 32, 32));
 	box-shadow: 1px 1px 0px 0px rgba(0,0,0, 0.4);
 	position:absolute;
 	width:20px;
@@ -335,5 +344,7 @@ button.ignition:after {
 	left:-3px;
 	right:-3px;
 	transition: 200ms ease all;
+	background:linear-gradient(rgb(224, 47, 47), rgb(131, 32, 32));
+
 }
 
