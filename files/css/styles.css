@@ -173,7 +173,7 @@ a img {
 body {
     background:#000;
     color:#fff;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Titillium Web', sans-serif;
 	font-size:16px;
 	overflow: hidden;
 }
@@ -198,7 +198,7 @@ body {
 
 
 .font-digital {
-	font-family:'Courier New', Courier, monospace
+
 }
 .speed {
     font-family:'digital';
@@ -276,14 +276,16 @@ button.ignition {
 	background: linear-gradient(#444, #000);
 	border:1px solid rgb(218, 218, 218);
 	font-size:18px;
-	letter-spacing: -1px;
+	letter-spacing: 0px;
 	border-radius:100em;
 	cursor: pointer;    
 	box-sizing: content-box;
 	position:relative;
 	text-align: center;
 	text-transform: uppercase;
-
+	font-family: 'Titillium Web';
+	font-weight: lighter;
+	
 	transition: 400ms ease all;
 
 	-webkit-touch-callout: none;
@@ -304,7 +306,7 @@ button.ignition:before {
 	right:-8px;
 	position: absolute;
 	z-index:-1;
-	background:linear-gradient(rgb(218, 218, 218), rgb(43, 43, 43));
+	background:linear-gradient(rgb(255, 255, 255), rgb(107, 107, 107));
 	border-radius:100em;
 	transition: 400ms ease all;
 }
@@ -315,8 +317,9 @@ button.ignition:after {
     z-index: 1;
     transition: 400ms ease all;
     position: absolute;
-    top: 47px;
-    left: 31px;
+    top: 43px;
+	left: 33px;
+	text-shadow:0px 1px 8px rgba(255, 255, 255, 0.5);
 }
 
 .running button.ignition {
