@@ -5,7 +5,7 @@
 
 $(document).ready(function () {
 
-	const PROD_MODE = true;//navigator.platform.indexOf("Win") === -1;
+	const PROD_MODE = false;//navigator.platform.indexOf("Win") === -1;
 
 	if (PROD_MODE) {
 		$(".dev").hide();
@@ -23,20 +23,18 @@ const App = {
 	maxSpeed: 0,
 	N: 0,
 	avgSpeed: 0,
-	duration : 0,
+	duration: 0,
 	totalDistance: 0,
 	timestamp: null,
-	prevLat: null,
-	prevLon: null,
-	prevSpeed: null,
+	prevCoords: null,
 	geoWatchId: null,
 
 	stats: {},
-	logs : [],
+	logs: [],
 	metric: true,
 
-	state : {
-		isFocusedMode : false
+	state: {
+		isFocusedMode: false
 	},
 
 
@@ -73,13 +71,12 @@ const App = {
 				self.stopGeolocation(isProd, self.geoWatchId);
 				noSleep.disable();
 
-				if(self.state.isFocusedMode){
-					let exitFullScreen = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-					exitFullScreen.call(document);
+				if (self.state.isFocusedMode) {
+					self.disableFocusedMode();
 				}
 
 
-				self.showStats();
+				self.showTripDetails();
 
 				//cleanup
 				self.logs = [];
@@ -89,10 +86,13 @@ const App = {
 				self.duration = 0;
 				self.totalDistance = 0;
 				self.prevSpeed = null;
-				self.prevLat = null;
-				self.prevLon = null;
+				self.prevCoords = null;
 			}
 
+		});
+
+		$(".trip-details-wrapper .dismiss").click(function () {
+			$('.trip-details-wrapper').hide();
 		});
 
 	},
@@ -128,7 +128,7 @@ const App = {
 
 	stopGeolocation: function (isProd, watchId) {
 
-		
+
 
 		if (isProd) {
 			if (navigator.geolocation) {
@@ -162,7 +162,10 @@ const App = {
 
 		if (position.coords.speed > 8.333 && !this.state.isFocusedMode) {
 			this.enableFocusedMode();
-			this.state.isFocusedMode = true;
+
+		} else if (position.coords.speed <= 8.333 && this.state.isFocusedMode) {
+			this.disableFocusedMode();
+
 		}
 
 		if (position.coords.speed != null) {
@@ -183,14 +186,12 @@ const App = {
 		this.N += 1;
 		this.avgSpeed = approxRollingAverage(this.avgSpeed, speed, this.N);
 
-		if (this.prevLat != null && this.prevLon != null && this.N % 2 === 0) {
-			let prevCoords = [this.prevLat, this.prevLon];
-			let deltaD = haversineDistance(prevCoords, [position.coords.latitude, position.coords.longitude], !this.metric); // in km or miles
+		if (this.prevCoords != null) {
+			let deltaD = haversineDistance(this.prevCoords, position.coords, !this.metric); // in km or miles
 			this.totalDistance += deltaD;
 		}
 
-		this.prevLat = position.coords.latitude;
-		this.prevLon = position.coords.longitude;
+		this.prevCoords = position.coords;
 
 
 		if (speed !== this.prevSpeed) {
@@ -209,13 +210,6 @@ const App = {
 
 		this.prevSpeed = speed;
 
-
-		$('.ignition').addClass('pulse')
-		window.setTimeout(function () {
-			$('.ignition').removeClass('pulse');
-		}, 200);
-
-
 		let debug = '\r\n accuracy         = ' + position.coords.accuracy;
 		debug += '\r\n altitude         = ' + position.coords.altitude;
 		debug += '\r\n altitudeAccuracy = ' + position.coords.altitudeAccuracy;
@@ -228,10 +222,10 @@ const App = {
 
 		this.duration = Math.round((new Date().getTime() - this.timestamp) / 1000);
 
-		$(".max-speed").html(this.getNiceSpeed(Math.round(this.maxSpeed), this.metric));
-		$(".avg-speed").html(this.getNiceSpeed(Math.round(this.avgSpeed), this.metric));
-		$(".distance").html(this.getNiceDistance(this.totalDistance, this.metric));
-		$(".elapsed").html('<span class="font-digital">' + this.getTimeFragment(this.duration) + '</span>');
+		$(".live-stats .max-speed").html(this.getNiceSpeed(Math.round(this.maxSpeed), this.metric));
+		$(".live-stats .avg-speed").html(this.getNiceSpeed(Math.round(this.avgSpeed), this.metric));
+		$(".live-stats .distance").html(this.getNiceDistance(this.totalDistance, this.metric));
+		$(".live-stats .elapsed").html('<span class="font-digital">' + this.getTimeFragment(this.duration) + '</span>');
 	},
 
 	geoErrorCallback: function (err) {
@@ -265,12 +259,20 @@ const App = {
 
 	enableFocusedMode: function () {
 
-		
-			const body = $('body')[0];
-			let fullScreen = body.requestFullscreen || body.webkitRequestFullScreen || body.mozRequestFullScreen || body.msRequestFullscreen;
-			fullScreen.call(body);
-		
-		
+
+		const body = $('body')[0];
+		let fullScreen = body.requestFullscreen || body.webkitRequestFullScreen || body.mozRequestFullScreen || body.msRequestFullscreen;
+		fullScreen.call(body);
+
+		this.state.isFocusedMode = true;
+
+	},
+
+	disableFocusedMode: function () {
+
+		this.state.isFocusedMode = false;
+
+
 	},
 
 	getTimeFragment: function (seconds) {
@@ -309,13 +311,54 @@ const App = {
 
 	},
 
-	showStats: function () {
+	showTripDetails: function () {
+		// TODO
 
 		var s = this.avgSpeed;
 		var t = this.duration / 3600;
-		
-		$('.distance').html(this.getNiceDistance(s * t, this.metric));
 
+		let firstCoord = this.logs[0].coords;
+		let lastCoord =  this.logs[this.logs.length - 1].coords;
+
+		$('.trip-details .max-speed').html(this.getNiceSpeed(this.maxSpeed, this.metric));
+		$('.trip-details .avg-speed').html(this.getNiceSpeed(Math.round(this.avgSpeed), this.metric));
+
+		$('.trip-details .distance').html(this.getNiceDistance(s * t, this.metric));
+		$('.trip-details .displacement').html(this.getNiceDistance(haversineDistance(firstCoord, lastCoord, !this.metric)));
+		$('.trip-details .duration').html(this.getTimeFragment(this.duration));
+
+
+		// elevation can be null, needs better logic : 
+		$('.trip-details .elevation-change').html(this.getNiceDistance(Math.round(this.getElevationChange() * 3.28084), false));
+		$('.trip-details .heading').html(Math.round(bearing(firstCoord, lastCoord)) + ' &deg;');
+		$('.trip-details .n-gps').html(this.N);
+
+		$(".trip-details-wrapper").show();
+
+
+	},
+
+	getElevationChange : function() {
+
+		
+		let i = 0;
+		let first = this.logs[i].coords.altitude;
+
+		while(first === null && i < this.logs.length) {
+			first = this.logs[++i].coords.altitude;
+		}
+
+
+		i = this.logs.length - 1;
+		let last = this.logs[i].coords.altitude;
+
+		while(last === null && i >= 0) {
+			last = this.logs[--i].coords.altitude;
+		}
+
+		console.log('first = '+first);
+		console.log('last = '+last);
+		return last - first;
 	},
 
 	zeroPad: function (x) {
@@ -333,11 +376,11 @@ function haversineDistance(coords1, coords2, isMiles) {
 		return x * Math.PI / 180;
 	}
 
-	var lon1 = coords1[0];
-	var lat1 = coords1[1];
+	var lon1 = coords1.latitude;
+	var lat1 = coords1.longitude;
 
-	var lon2 = coords2[0];
-	var lat2 = coords2[1];
+	var lon2 = coords2.latitude;
+	var lat2 = coords2.longitude;
 
 	var R = 6371; // km
 
@@ -362,4 +405,30 @@ function approxRollingAverage(avg, new_sample, n) {
 	newAvg = newAvg - (newAvg / n);
 	newAvg = newAvg + (new_sample / n);
 	return newAvg;
+}
+
+function bearing(start, dest) {
+
+	// Converts from degrees to radians.
+	function toRadians(degrees) {
+		return degrees * Math.PI / 180;
+	};
+
+	// Converts from radians to degrees.
+	function toDegrees(radians) {
+		return radians * 180 / Math.PI;
+	}
+
+
+	let startLat = toRadians(start.latitude);
+	let startLng = toRadians(start.longitude);
+	let destLat = toRadians(dest.latitude);
+	let destLng = toRadians(dest.longitude);
+
+	let y = Math.sin(destLng - startLng) * Math.cos(destLat);
+	let x = Math.cos(startLat) * Math.sin(destLat) -
+		Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+	let brng = Math.atan2(y, x);
+	brng = toDegrees(brng);
+	return (brng + 360) % 360;
 }

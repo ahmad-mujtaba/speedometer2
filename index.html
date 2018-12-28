@@ -30,16 +30,16 @@
 
 
 
-	<link href="https://fonts.googleapis.com/css?family=Titillium+Web:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,400,700" rel="stylesheet">
     <link href="files/css/styles.css" rel="stylesheet">
-	<link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
 
 
 
 </head>
 
 <body class='idle'>
-    <div class='wrapper'>
+    <div class='wrapper app-main'>
         <div class='speed-dial'>
             <span class='speed'><span class='zeropad'>8</span><span class='zeropad'>8</span><span class='zeropad'>8</span></span>
             <span class='unit'></span>
@@ -49,22 +49,99 @@
 
     <div class='dev'></div>
 
-    <div class='stats'>
+    <div class='live-stats'>
         <div>
             <div>
-                Max Speed <span class='val max-speed'><span class='font-digital'>0</span> kmph</span>
+                Max Speed <span class='val max-speed'>0 kmph</span>
             </div>
             <div>
-                Avg Speed <span class='val avg-speed'><span class='font-digital'>0</span> kmph</span>
+                Avg Speed <span class='val avg-speed'>0 kmph</span>
             </div>
         </div>
 
         <div>
             <div>
-                Distance <span class='val distance'><span class='font-digital'>0</span> km</span>
+                Distance <span class='val distance'>0 km</span>
             </div>
             <div>
-                Time <span class='val elapsed'><span class='font-digital'>0</span> minutes</span>
+                Duration <span class='val elapsed'>12 : 34 : 56</span>
+            </div>
+        </div>
+    </div>
+
+    <div class='trip-details-wrapper' style='display:none'>
+        <h2>Trip Details</h2>
+        <div class='trip-details'>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Max Speed
+                </div>
+                <div class='value max-speed'>
+                    140 kmph
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Average Speed
+                </div>
+                <div class='value avg-speed'>
+                    65 kmph
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Distance Travelled
+                </div>
+                <div class='value distance'>
+                    35 km
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Displacement
+                </div>
+                <div class='value displacement'>
+                    25 km
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Duration
+                </div>
+                <div class='value duration'>
+                    12 : 34 : 56
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='stat'>
+                    Elevation Change
+                </div>
+                <div class='value elevation-change'>
+                    -120 m
+                </div>
+            </div>
+            
+            <div class='trip-row'>
+                <div class='stat'>
+                    Heading
+                </div>
+                <div class='value heading'>
+                    340 &deg;
+                </div>
+            </div>
+
+            <div class='trip-row'>
+                <div class='stat'>
+                    Number of GPS locks
+                </div>
+                <div class='value n-gps'>
+                    6548
+                </div>
+            </div>
+            <div class='trip-row'>
+                <div class='dismiss-wrapper'>
+                    <button class='dismiss'>Dismiss</button>
+                </div>
             </div>
         </div>
     </div>
