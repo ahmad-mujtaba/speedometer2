@@ -344,8 +344,9 @@ const App = {
 		let i = 0;
 		let first = this.logs[i].coords.altitude;
 
-		while(first === null && i < this.logs.length) {
-			first = this.logs[++i].coords.altitude;
+		while(first === null && i < this.logs.length - 1) {
+			first = this.logs[i].coords.altitude;
+			i++;
 		}
 
 
@@ -353,7 +354,8 @@ const App = {
 		let last = this.logs[i].coords.altitude;
 
 		while(last === null && i >= 0) {
-			last = this.logs[--i].coords.altitude;
+			last = this.logs[i].coords.altitude;
+			--i;
 		}
 
 		console.log('first = '+first);
