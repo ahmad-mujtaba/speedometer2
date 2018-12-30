@@ -35,7 +35,7 @@ const App = {
 
 	stats: {},
 	logs: [],
-	metric: true,
+	metric: false,
 
 	state: {
 		isFocusedMode: false
@@ -172,9 +172,12 @@ const App = {
 		this.logs.push(position);
 		this.N += 1;
 
-		$('.ping-indicator i').animate({ opacity: 1.0 }, 0, function () {
-			$(this).animate({ opacity: 0 }, 400);
-		});
+		$('.ping-indicator')
+			.attr('data-accuracy-level', this.getAccuracyLevel(position.coords.accuracy))
+			.animate({opacity:1.0}, 0, function(){
+				$(this).animate({opacity:0.6}, 300);
+			});
+		
 
 		let $speed = $(".speed");
 		let $dev = $(".dev");
@@ -252,6 +255,19 @@ const App = {
 	geoErrorCallback: function (err) {
 		alert('Please enable your GPS position future.' + err);
 		$('.dev').html(JSON.stringify(err));
+	},
+
+	getAccuracyLevel : function(accuracy) {
+
+		if(accuracy < 4) {
+			return 'good';
+		} else if (accuracy >= 4 && accuracy < 12) {
+			return 'moderate';
+		} else if (accuracy >= 12 && accuracy < 20) {
+			return 'poor';
+		} else {
+			return 'trash';
+		}
 	},
 
 	getFakePositionData: function () {
@@ -402,9 +418,9 @@ const App = {
 
 	getNiceElevationChange: function (elevationChange, isMetric) {
 		if (elevationChange >= 0) {
-			return '+ ' + elevationChange + (isMetric ? ' m' : ' ft');
+			return '+ ' + Math.round(elevationChange) + (isMetric ? ' m' : ' ft');
 		}
-		return '' + elevationChange + (isMetric ? ' m' : ' ft');
+		return '' + Math.round(elevationChange) + (isMetric ? ' m' : ' ft');
 
 	},
 

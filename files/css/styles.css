@@ -151,19 +151,39 @@ body {
 .idle .dev {
 	top: -1000px;
 }
-
-.ping-indicator {
-	width: 3rem;
-    height: 3rem;
+.idle .ping-indicator{
+	display:none;
+}
+.ping-indicator {	
     text-align: center;
-    margin: 2rem 0 0 0;
-    font-size: 2rem;
-    color: rgb(255, 50, 50);
+    margin: 0 0 2rem 0;    
+}
+.ping-indicator span {
+	display: inline-block;
+    margin: 0 0.7rem 0 0;
+    background: #444;
+    width: 12px;
+    height: 12px;
+    border-radius: 30px;
+    transition: 200ms ease background-color;
+}
+.ping-indicator[data-accuracy-level='trash'] span:first-child{
+	background: linear-gradient(red, rgb(161, 0, 0));
 }
 
-.ping-indicator i {
-	opacity:0;
-	
+.ping-indicator[data-accuracy-level='poor'] span:first-child,
+.ping-indicator[data-accuracy-level='poor'] span:nth-child(2){
+	background: linear-gradient(rgb(255, 173, 21), rgb(202, 131, 0));
+}
+
+.ping-indicator[data-accuracy-level='moderate'] span:first-child,
+.ping-indicator[data-accuracy-level='moderate'] span:nth-child(2),
+.ping-indicator[data-accuracy-level='moderate'] span:nth-child(3){
+	background: linear-gradient(rgb(255, 239, 21), rgb(202, 199, 0));
+}
+
+.ping-indicator[data-accuracy-level='good'] span {
+	background: linear-gradient(rgb(21, 255, 177), rgb(0, 202, 118));
 }
 
 .live-stats {
