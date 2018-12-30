@@ -1,7 +1,7 @@
 'use strict'
 
 
-const PROD_MODE = navigator.platform.indexOf("Win") === -1;
+const PROD_MODE = true;//navigator.platform.indexOf("Win") === -1;
 
 $(document).ready(function () {
 
@@ -43,6 +43,12 @@ const App = {
 
 		var self = this;
 
+
+		$("button").click(function (e) {
+			if ('vibrate' in navigator) {
+				navigator.vibrate(70);
+			}
+		});
 
 		$(".ignition").click(function (e) {
 
@@ -342,7 +348,7 @@ const App = {
 		// elevation can be null, needs better logic : 
 		$('.trip-details .elevation-change').html(this.getNiceDistance(Math.round(this.getElevationChange() * 3.28084), false));
 
-		let bearing = Math.round(bearing(firstCoord, lastCoord));
+		let bearing = Math.round(getBearing(firstCoord, lastCoord));
 		$('.trip-details .heading').html(bearing + ' &deg;');
 		$('.trip-details .n-gps').html(this.N);
 
@@ -425,7 +431,7 @@ function approxRollingAverage(avg, new_sample, n) {
 	return newAvg;
 }
 
-function bearing(start, dest) {
+function getBearing(start, dest) {
 
 	// Converts from degrees to radians.
 	function toRadians(degrees) {
