@@ -152,6 +152,20 @@ body {
 	top: -1000px;
 }
 
+.ping-indicator {
+	width: 3rem;
+    height: 3rem;
+    text-align: center;
+    margin: 2rem 0 0 0;
+    font-size: 2rem;
+    color: rgb(255, 50, 50);
+}
+
+.ping-indicator i {
+	opacity:0;
+	
+}
+
 .live-stats {
 	position: fixed;
 	bottom: 0;
@@ -343,6 +357,17 @@ button.ignition:after {
 .trip-details .trip-row .dismiss-wrapper {
 	text-align: center;
 	flex: 100%;
+}
+
+.trip-details .heading-indicator {
+	display: inline-block;    
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 30em;
+    border: 1px solid rgb(226, 38, 0);
+    margin-left: 1rem;
 }
 
 form[action='export.php'] {

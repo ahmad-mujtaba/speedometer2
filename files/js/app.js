@@ -1,14 +1,18 @@
 'use strict'
 
 
-const PROD_MODE = true;//navigator.platform.indexOf("Win") === -1;
+const PROD_MODE = navigator.platform.indexOf("Win") === -1;
 
-$(document).ready(function () {
+$(document).ready(async function () {
 
 
 
 	if (PROD_MODE) {
 		$(".dev").hide();
+	} else {
+		const response = await fetch('fakeData.json');
+		const json = await response.json();
+		App.fakeData = json;
 	}
 
 
@@ -36,6 +40,7 @@ const App = {
 	state: {
 		isFocusedMode: false
 	},
+	fakeData: [],
 
 
 	init: function (isProd) {
@@ -90,7 +95,7 @@ const App = {
 		});
 
 		$(".trip-details-wrapper .dismiss").click(function () {
-			$('.trip-details-wrapper').hide();
+			$('.trip-details-wrapper').slideUp(400);
 
 			//cleanup
 			self.logs = [];
@@ -129,8 +134,7 @@ const App = {
 				alert("Geolocation API is not supported in your browser.");
 			}
 		} else {
-			watchId = window.setInterval(function () { self.mockWatchPosition(self) }, 800);
-			console.log('starting watchId = ' + watchId);
+			watchId = window.setInterval(function () { self.mockWatchPosition(self) }, 500);
 		}
 
 		if (this.metric) {
@@ -144,9 +148,6 @@ const App = {
 	},
 
 	stopGeolocation: function (isProd, watchId) {
-
-
-
 		if (isProd) {
 			if (navigator.geolocation) {
 				navigator.geolocation.clearWatch(watchId);
@@ -155,22 +156,25 @@ const App = {
 				alert("Geolocation API is not supported in your browser.");
 			}
 		} else {
-			console.log('clearing watchId = ' + watchId);
 			window.clearInterval(watchId);
 		}
 	},
 
 	mockWatchPosition: function (self) {
-		const avgSpeeds = [4, 60, 110, 220, 800];
-		const randomSpeed = avgSpeeds.randomElement();
 
-		let fakeData = self.getFakePositionData(randomSpeed);
+
+		let fakeData = self.getFakePositionData();
 		self.geoSuccessCallback(fakeData);
 	},
 
 	geoSuccessCallback: function (position) {
 
 		this.logs.push(position);
+		this.N += 1;
+
+		$('.ping-indicator i').animate({ opacity: 1.0 }, 0, function () {
+			$(this).animate({ opacity: 0 }, 400);
+		});
 
 		let $speed = $(".speed");
 		let $dev = $(".dev");
@@ -200,7 +204,7 @@ const App = {
 			this.maxSpeed = speed;
 		}
 
-		this.N += 1;
+
 		this.avgSpeed = approxRollingAverage(this.avgSpeed, speed, this.N);
 
 		if (this.prevCoords != null) {
@@ -250,26 +254,10 @@ const App = {
 		$('.dev').html(JSON.stringify(err));
 	},
 
-	getFakePositionData: function (speed) {
+	getFakePositionData: function () {
 
-		const accuracies = [10, 100, 1000];
-		let tmp = {};
-
-		tmp.coords = {};
-
-		tmp.coords.accuracy = Math.round(accuracies.randomElement() * Math.random());
-		tmp.coords.altitude = Math.round(458 + (Math.random() * 30));
-		tmp.coords.altitudeAccuracy = Math.round(accuracies.randomElement() * Math.random());
-
-		tmp.coords.heading = Math.round(14 + Math.random() * 45);
-
-		tmp.coords.speed = Math.round((Math.random() * (speed / 26)) + (speed / 3.6));
-
-		tmp.coords.latitude = 11.6081838 - Math.random() * 2;
-		tmp.coords.longitude = -56.6081838 + Math.random() * 2;
-
+		let tmp = this.fakeData[this.N % this.fakeData.length];
 		tmp.timestamp = new Date().getTime();
-
 		return tmp;
 
 	},
@@ -341,33 +329,39 @@ const App = {
 		$('.trip-details .avg-speed').html(this.getNiceSpeed(Math.round(this.avgSpeed), this.metric));
 
 		$('.trip-details .distance').html(this.getNiceDistance(s * t, this.metric));
-		$('.trip-details .displacement').html(this.getNiceDistance(haversineDistance(firstCoord, lastCoord, !this.metric)));
+		$('.trip-details .displacement').html(this.getNiceDistance(haversineDistance(firstCoord, lastCoord, !this.metric), this.metric));
 		$('.trip-details .duration').html(this.getTimeFragment(this.duration));
 
 
 		// elevation can be null, needs better logic : 
-		$('.trip-details .elevation-change').html(this.getNiceDistance(Math.round(this.getElevationChange() * 3.28084), false));
+		let elevationChange = this.getElevationChange();
+		if (elevationChange >= 0) {
+			$('.elevation-icon').html("<i class='mdi mdi-elevation-rise'></i>");
+		} else {
+			$('.elevation-icon').html("<i class='mdi mdi-elevation-decline'></i>");
+		}
+		$('.trip-details .elevation-change').html(this.getNiceElevationChange(elevationChange, this.metric));
 
 		let bearing = Math.round(getBearing(firstCoord, lastCoord));
-		$('.trip-details .heading').html(bearing + ' &deg;');
+		$('.trip-details .heading').html(bearing + '&deg; <span class="heading-indicator" style="transform:rotate(' + bearing + 'deg)"><i class="mdi mdi-navigation"></i></span>');
 		$('.trip-details .n-gps').html(this.N);
 
 
 		var data = [];
 
-		for(var i =0; i <this.logs.length; ++i) {
-			
+		for (var i = 0; i < this.logs.length; ++i) {
+
 			var log = this.logs[i];
 			var tmp = {
-				timestamp : log.timestamp,
-				coords : {
+				timestamp: log.timestamp,
+				coords: {
 					accuracy: log.coords.accuracy,
-					altitude : log.coords.altitude,
-					altitudeAccuracy : log.coords.altitudeAccuracy,
-					speed : log.coords.speed,
-					latitude : log.coords.latitude,
-					longitude : log.coords.longitude,
-					heading:log.coords.heading
+					altitude: log.coords.altitude,
+					altitudeAccuracy: log.coords.altitudeAccuracy,
+					speed: log.coords.speed,
+					latitude: log.coords.latitude,
+					longitude: log.coords.longitude,
+					heading: log.coords.heading
 				}
 			};
 
@@ -376,7 +370,7 @@ const App = {
 		$('input.data').val(JSON.stringify(data));
 
 
-		$(".trip-details-wrapper").show();
+		$(".trip-details-wrapper").slideDown(400);
 
 
 	},
@@ -401,9 +395,17 @@ const App = {
 			--i;
 		}
 
-		console.log('first = ' + first);
-		console.log('last = ' + last);
-		return last - first;
+		var elevationChange = last - first;
+		if (!this.metric) elevationChange *= 3.28084;
+		return elevationChange;
+	},
+
+	getNiceElevationChange: function (elevationChange, isMetric) {
+		if (elevationChange >= 0) {
+			return '+ ' + elevationChange + (isMetric ? ' m' : ' ft');
+		}
+		return '' + elevationChange + (isMetric ? ' m' : ' ft');
+
 	},
 
 	zeroPad: function (x) {
