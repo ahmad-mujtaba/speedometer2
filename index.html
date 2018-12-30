@@ -20,17 +20,21 @@
 
 
     <script>
-        // if ('serviceWorker' in navigator) {
-        //     // Use the window load event to keep the page load performant
-        //     window.addEventListener('load', () => {
-        //         navigator.serviceWorker.register('service-worker.js');
-        //     });
-        // }
+        if ('serviceWorker' in navigator) {
+            // Use the window load event to keep the page load performant
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js', {
+                    scope: '.'
+                });
+            });
+        }
     </script>
 
 
 
     <link href="https://fonts.googleapis.com/css?family=Titillium+Web:200,400,700" rel="stylesheet">
+    <link rel='stylesheet' href='//cdn.materialdesignicons.com/3.2.89/css/materialdesignicons.min.css'>
+
     <link href="files/css/styles.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
 
@@ -39,6 +43,7 @@
 </head>
 
 <body class='idle'>
+    
     <div class='wrapper app-main'>
         <div class='speed-dial'>
             <span class='speed'><span class='zeropad'>8</span><span class='zeropad'>8</span><span class='zeropad'>8</span></span>
@@ -70,11 +75,11 @@
     </div>
 
     <div class='trip-details-wrapper' style='display:none'>
-        <h2>Trip Details</h2>
+        <h2><i class='mdi mdi-information-outline'></i> Trip Details</h2>
         <div class='trip-details'>
             <div class='trip-row'>
                 <div class='stat'>
-                    Max Speed
+                    <i class='mdi mdi-speedometer'></i> Max Speed
                 </div>
                 <div class='value max-speed'>
                     140 kmph
@@ -82,7 +87,7 @@
             </div>
             <div class='trip-row'>
                 <div class='stat'>
-                    Average Speed
+                    <i class='mdi mdi-speedometer'></i> Average Speed
                 </div>
                 <div class='value avg-speed'>
                     65 kmph
@@ -90,7 +95,7 @@
             </div>
             <div class='trip-row'>
                 <div class='stat'>
-                    Distance Travelled
+                    <i class='mdi mdi-map-marker'></i> Distance Travelled
                 </div>
                 <div class='value distance'>
                     35 km
@@ -98,7 +103,7 @@
             </div>
             <div class='trip-row'>
                 <div class='stat'>
-                    Displacement
+                    <i class='mdi mdi-map-marker'></i> Displacement
                 </div>
                 <div class='value displacement'>
                     25 km
@@ -106,7 +111,7 @@
             </div>
             <div class='trip-row'>
                 <div class='stat'>
-                    Duration
+                    <i class='mdi mdi-timer'></i> Duration
                 </div>
                 <div class='value duration'>
                     12 : 34 : 56
@@ -114,16 +119,16 @@
             </div>
             <div class='trip-row'>
                 <div class='stat'>
-                    Elevation Change
+                    <i class='mdi mdi-elevation-rise'></i> Elevation Change
                 </div>
                 <div class='value elevation-change'>
                     -120 m
                 </div>
             </div>
-            
+
             <div class='trip-row'>
                 <div class='stat'>
-                    Heading
+                    <i class='mdi mdi-compass'></i> Heading
                 </div>
                 <div class='value heading'>
                     340 &deg;
@@ -132,7 +137,7 @@
 
             <div class='trip-row'>
                 <div class='stat'>
-                    Number of GPS locks
+                    <i class='mdi mdi-crosshairs-gps'></i> Number of GPS locks
                 </div>
                 <div class='value n-gps'>
                     6548
@@ -140,7 +145,14 @@
             </div>
             <div class='trip-row'>
                 <div class='dismiss-wrapper'>
-                    <button class='dismiss'>Dismiss</button>
+                    <button class='dismiss'><i class='mdi mdi-close'></i> Dismiss</button>
+
+                    <form action='export' method="POST">
+                        <input type='hidden' name='data' value='' class='data'>
+                        <input type='hidden' name='filename' value='data' class='filename'>
+                        <button class='export' color='silver'><i class='mdi mdi-download'></i> Download GPS data</button>
+                    </form>
+                    
                 </div>
             </div>
         </div>

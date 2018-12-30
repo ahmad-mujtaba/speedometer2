@@ -1,11 +1,11 @@
 'use strict'
 
 
-
+const PROD_MODE = navigator.platform.indexOf("Win") === -1;
 
 $(document).ready(function () {
 
-	const PROD_MODE = true;//navigator.platform.indexOf("Win") === -1;
+
 
 	if (PROD_MODE) {
 		$(".dev").hide();
@@ -78,23 +78,34 @@ const App = {
 
 				self.showTripDetails();
 
-				//cleanup
-				self.logs = [];
-				self.maxSpeed = 0;
-				self.N = 0;
-				self.avgSpeed = 0;
-				self.duration = 0;
-				self.totalDistance = 0;
-				self.prevSpeed = null;
-				self.prevCoords = null;
+
 			}
 
 		});
 
 		$(".trip-details-wrapper .dismiss").click(function () {
 			$('.trip-details-wrapper').hide();
+
+			//cleanup
+			self.logs = [];
+			self.maxSpeed = 0;
+			self.N = 0;
+			self.avgSpeed = 0;
+			self.duration = 0;
+			self.totalDistance = 0;
+			self.prevSpeed = null;
+			self.prevCoords = null;
 		});
 
+		$(".export").click(function (e) {
+			var filename = window.prompt('Enter a name for the data file', 'myTrip');
+			if (filename == null) {
+				e.preventDefault();
+				return;
+			}
+			$(".filename").val(filename);
+
+		});
 	},
 
 	startGeolocation: function (isProd) {
@@ -318,7 +329,7 @@ const App = {
 		var t = this.duration / 3600;
 
 		let firstCoord = this.logs[0].coords;
-		let lastCoord =  this.logs[this.logs.length - 1].coords;
+		let lastCoord = this.logs[this.logs.length - 1].coords;
 
 		$('.trip-details .max-speed').html(this.getNiceSpeed(this.maxSpeed, this.metric));
 		$('.trip-details .avg-speed').html(this.getNiceSpeed(Math.round(this.avgSpeed), this.metric));
@@ -330,21 +341,26 @@ const App = {
 
 		// elevation can be null, needs better logic : 
 		$('.trip-details .elevation-change').html(this.getNiceDistance(Math.round(this.getElevationChange() * 3.28084), false));
-		$('.trip-details .heading').html(Math.round(bearing(firstCoord, lastCoord)) + ' &deg;');
+
+		let bearing = Math.round(bearing(firstCoord, lastCoord));
+		$('.trip-details .heading').html(bearing + ' &deg;');
 		$('.trip-details .n-gps').html(this.N);
+
+		$('input.data').val(JSON.stringify(this.logs));
+
 
 		$(".trip-details-wrapper").show();
 
 
 	},
 
-	getElevationChange : function() {
+	getElevationChange: function () {
 
-		
+
 		let i = 0;
 		let first = this.logs[i].coords.altitude;
 
-		while(first === null && i < this.logs.length - 1) {
+		while (first === null && i < this.logs.length - 1) {
 			first = this.logs[i].coords.altitude;
 			i++;
 		}
@@ -353,13 +369,13 @@ const App = {
 		i = this.logs.length - 1;
 		let last = this.logs[i].coords.altitude;
 
-		while(last === null && i >= 0) {
+		while (last === null && i >= 0) {
 			last = this.logs[i].coords.altitude;
 			--i;
 		}
 
-		console.log('first = '+first);
-		console.log('last = '+last);
+		console.log('first = ' + first);
+		console.log('last = ' + last);
 		return last - first;
 	},
 

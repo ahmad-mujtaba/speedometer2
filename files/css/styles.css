@@ -182,7 +182,7 @@ body {
 button {
 	border:none;
 	border-radius:3px;
-	background:rgb(202, 80, 50);
+	background:rgb(226, 38, 0);
 	color:#fff;
 	padding:1rem 2rem;
 	display:inline-block;
@@ -197,6 +197,19 @@ button {
 	cursor:pointer;
 	text-transform: uppercase;
 
+}
+
+button[color='blue'] {
+	background:rgb(0, 167, 218);
+}
+
+button[color='green'] {
+	background:rgb(160, 204, 0);
+}
+
+button[color='silver'] {
+	background:rgb(206, 206, 206);
+	color:#333;
 }
 
 button.ignition {
@@ -324,11 +337,14 @@ button.ignition:after {
 }
 
 .trip-details .trip-row .value {
-	color: #c20;
-	font-weight: bold;
+	color: rgb(226, 38, 0);
 }
 
 .trip-details .trip-row .dismiss-wrapper {
 	text-align: center;
 	flex: 100%;
+}
+
+form[action='export'] {
+	display: inline-block;
 }
