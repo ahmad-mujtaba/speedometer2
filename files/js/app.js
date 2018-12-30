@@ -352,7 +352,28 @@ const App = {
 		$('.trip-details .heading').html(bearing + ' &deg;');
 		$('.trip-details .n-gps').html(this.N);
 
-		$('input.data').val(JSON.stringify(this.logs));
+
+		var data = [];
+
+		for(var i =0; i <this.logs.length; ++i) {
+			
+			var log = this.logs[i];
+			var tmp = {
+				timestamp : log.timestamp,
+				coords : {
+					accuracy: log.coords.accuracy,
+					altitude : log.coords.altitude,
+					altitudeAccuracy : log.coords.altitudeAccuracy,
+					speed : log.coords.speed,
+					latitude : log.coords.latitude,
+					longitude : log.coords.longitude,
+					heading:log.coords.heading
+				}
+			};
+
+			data.push(tmp);
+		}
+		$('input.data').val(JSON.stringify(data));
 
 
 		$(".trip-details-wrapper").show();

@@ -345,6 +345,6 @@ button.ignition:after {
 	flex: 100%;
 }
 
-form[action='export'] {
+form[action='export.php'] {
 	display: inline-block;
 }
