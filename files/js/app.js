@@ -35,7 +35,7 @@ const App = {
 
 	stats: {},
 	logs: [],
-	metric: false,
+	metric: true,
 
 	state: {
 		isFocusedMode: false
